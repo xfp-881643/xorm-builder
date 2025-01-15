@@ -7,6 +7,7 @@ package builder
 import (
 	"fmt"
 	"sort"
+	"strings"
 )
 
 // Incr implements a type used by Eq
@@ -69,7 +70,9 @@ func (eq Eq) OpWriteTo(op string, w Writer) error {
 				return err
 			}
 		default:
-			if _, err := fmt.Fprintf(w, "%s=?", k); err != nil {
+			if strings.Contains(k, "?") {
+				fmt.Fprint(w, k) 
+			} else if _, err := fmt.Fprintf(w, "%s=?", k); err != nil {
 				return err
 			}
 			w.Append(v)
